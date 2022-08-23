@@ -1,0 +1,37 @@
+{
+  "name": "pkg",
+  "version": "1.0.0",
+  "description": "Image Resizing project",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "test": "jasmine",
+    "prettier": "prettier --config .prettierrc ./**/*.js ./**/*.ts --write",
+    "eslint": "eslint ./**/*.js",
+    "start": "nodemon src/index.ts"
+  },
+  "author": "Mostafa El-Swefy",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jasmine": "^4.0.3",
+    "@types/node": "^18.7.10",
+    "@types/nodemon": "^1.19.2",
+    "@types/sharp": "^0.30.5",
+    "@types/supertest": "^2.0.12",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "jasmine": "^4.3.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "nodemon": "^2.0.19",
+    "popups": "^1.1.3",
+    "sharp": "^0.30.7",
+    "supertest": "^6.2.4"
+  }
+}

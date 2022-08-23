@@ -84,10 +84,8 @@ imgRoute.get('/', async (req, res) => {
       !alreadyConverted(imageName, width, height) ||
       !fs.existsSync(imageOutputPath)
     ) {
-      // If thumb directory does not exist, creates it. Else, delete all the files in the directory to avoid having large number of images
-      if (!fs.existsSync('./thumb')) {
-        await fs.promises.mkdir('./thumb', { recursive: true });
-      } else {
+      // If thumb directory exists, delete all the files in the directory to avoid having large number of images
+      if (fs.existsSync('./thumb')) {
         await fse.emptyDir('./thumb');
       }
       // call resize function

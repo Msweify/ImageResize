@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import fs from 'fs';
 
 /*
    resizeImage function:
@@ -18,6 +19,10 @@ const resizeImage = async (
   const outimgpath: string = './thumb/'.concat(
     imageName.concat('_thumb.'.concat(imageExtention))
   );
+  // If thumb directory does not exist, creates it.
+  if (!fs.existsSync('./thumb')) {
+    await fs.promises.mkdir('./thumb', { recursive: true });
+  }
   try {
     await sharp(imgPath).resize(width, height).toFile(outimgpath);
   } catch (err) {

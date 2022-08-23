@@ -79,6 +79,7 @@ app.get('/images', async (req, res) => {
 
   try {
     validateInputs(imagePath, width, height); // check that user input is valid.
+
     if (
       !alreadyConverted(imageName, width, height) ||
       !fs.existsSync(imageOutputPath)
@@ -90,11 +91,12 @@ app.get('/images', async (req, res) => {
       prevImageName = imageName;
       prevwidth = width;
       prevHeight = height;
-      // Read image from file and send to the browser
-      const img = await fsPromise.readFile(imageOutputPath, 'binary');
-      res.writeHead(200, { 'Content-Type': 'image/jpg' });
-      res.end(img, 'binary');
     }
+
+    // Read image from file and send to the browser
+    const img = await fsPromise.readFile(imageOutputPath, 'binary');
+    res.writeHead(200, { 'Content-Type': 'image/jpg' });
+    res.end(img, 'binary');
   } catch (err) {
     // In case of error display, send it to browser
     res.send(`<h1>${err}</h1>`);

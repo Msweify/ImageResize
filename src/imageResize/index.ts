@@ -1,6 +1,5 @@
 import sharp from 'sharp';
 
-
 /*
    resizeImage function:
    Inputs: imagePath: string, width: number, height: number

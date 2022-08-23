@@ -1,6 +1,7 @@
 import express from 'express';
 import resizeImage from '../../imageResize/index';
 import fs from 'fs';
+import fse from 'fs-extra';
 import { promises as fsPromise } from 'fs';
 
 const imgRoute = express.Router();
@@ -78,11 +79,17 @@ imgRoute.get('/', async (req, res) => {
   try {
     validateInputs(imagePath, width, height); // check that user input is valid.
 
+    // check that the image requested image resizing is similar to previous one and that the converted image is stored in thumb folder.
     if (
       !alreadyConverted(imageName, width, height) ||
       !fs.existsSync(imageOutputPath)
     ) {
-      // check that the image requested image resizing is similar to previous one and that the converted image is stored in thumb folder.
+      // If thumb directory does not exist, creates it. Else, delete all the files in the directory to avoid having large number of images
+      if (!fs.existsSync('./thumb')) {
+        await fs.promises.mkdir('./thumb', { recursive: true });
+      } else {
+        await fse.emptyDir('./thumb');
+      }
       // call resize function
       await resizeImage.resizeImage(imagePath, width, height);
       // Update cached values if image is resized without throwing errors

@@ -2,10 +2,11 @@
 This project resizes images according to user choice 
 
 The project includes the follwoing:
-  1. src: This directory has all the typescript files
+  1. src: This directory has all the typescript files as well as the jasmine tests
   2. images: This directory has all the images that can be resized
-  3. package and tsconfig json files: These are used to configure the npm module as well as the typescript
-  4. .prettierrc and .eslintrc: These files are used to configure prettier and eslint
+  3. spec: This directory has the jasmine configuration
+  4. package and tsconfig json files: These are used to configure the npm module as well as the typescript
+  5. .prettierrc and .eslintrc: These files are used to configure prettier and eslint
 
 Scripts to run:
   1. build: This script is used to compile typescript files in src directory to javascript files. Javascript files are created in dist file

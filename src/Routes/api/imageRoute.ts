@@ -65,45 +65,48 @@ const alreadyConverted = (
   return false;
 };
 
-imgRoute.get('/', async (req, res) => {
-  const imageName: string = req.query.filename as string; // Get imageName from URL
-  const imagePath: string = './images/'.concat(imageName).concat('.jpg'); // Assuming all images have jpg extention
-  const imageOutputPath: string = './thumb/'
-    .concat(imageName)
-    .concat('_thumb.jpg'); // imageOutputPath is the path for the resized image
-  const widthInp: string = req.query.width as unknown as string; // Get Required width from URL
-  const heightInp: string = req.query.height as unknown as string; // Get Required height from URL
-  const width: number = parseInt(widthInp);
-  const height: number = parseInt(heightInp);
+imgRoute.get(
+  '/',
+  async (req: express.Request, res: express.Response): Promise<void> => {
+    const imageName: string = req.query.filename as string; // Get imageName from URL
+    const imagePath: string = './images/'.concat(imageName).concat('.jpg'); // Assuming all images have jpg extention
+    const imageOutputPath: string = './thumb/'
+      .concat(imageName)
+      .concat('_thumb.jpg'); // imageOutputPath is the path for the resized image
+    const widthInp: string = req.query.width as unknown as string; // Get Required width from URL
+    const heightInp: string = req.query.height as unknown as string; // Get Required height from URL
+    const width: number = parseInt(widthInp);
+    const height: number = parseInt(heightInp);
 
-  try {
-    validateInputs(imagePath, width, height); // check that user input is valid.
+    try {
+      validateInputs(imagePath, width, height); // check that user input is valid.
 
-    // check that the image requested image resizing is similar to previous one and that the converted image is stored in thumb folder.
-    if (
-      !alreadyConverted(imageName, width, height) ||
-      !fs.existsSync(imageOutputPath)
-    ) {
-      // If thumb directory exists, delete all the files in the directory to avoid having large number of images
-      if (fs.existsSync('./thumb')) {
-        await fse.emptyDir('./thumb');
+      // check that the image requested image resizing is similar to previous one and that the converted image is stored in thumb folder.
+      if (
+        !alreadyConverted(imageName, width, height) ||
+        !fs.existsSync(imageOutputPath)
+      ) {
+        // If thumb directory exists, delete all the files in the directory to avoid having large number of images
+        if (fs.existsSync('./thumb')) {
+          await fse.emptyDir('./thumb');
+        }
+        // call resize function
+        await resizeImage.resizeImage(imagePath, width, height);
+        // Update cached values if image is resized without throwing errors
+        prevImageName = imageName;
+        prevwidth = width;
+        prevHeight = height;
       }
-      // call resize function
-      await resizeImage.resizeImage(imagePath, width, height);
-      // Update cached values if image is resized without throwing errors
-      prevImageName = imageName;
-      prevwidth = width;
-      prevHeight = height;
-    }
 
-    // Read image from file and send to the browser
-    const img = await fsPromise.readFile(imageOutputPath, 'binary');
-    res.writeHead(200, { 'Content-Type': 'image/jpg' });
-    res.end(img, 'binary');
-  } catch (err) {
-    // In case of error display, send it to browser
-    res.send(`<h1>${err}</h1>`);
+      // Read image from file and send to the browser
+      const img = await fsPromise.readFile(imageOutputPath, 'binary');
+      res.writeHead(200, { 'Content-Type': 'image/jpg' });
+      res.end(img, 'binary');
+    } catch (err) {
+      // In case of error display, send it to browser
+      res.send(`<h1>${err}</h1>`);
+    }
   }
-});
+);
 
 export default imgRoute;
